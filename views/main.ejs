@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+      i{
+        cursor: pointer;
+      }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">To-do App</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Dropdown
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Action</a></li>
+                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+              </li>
+            </ul>
+            <form class="d-flex" role="search">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+          </div>
+        </div>
+      </nav>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit task</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+
+        <form action="#" method="POST">
+          <div class="mb-3">
+            <label  class="form-label">Task title</label>
+            <input type="text" class="form-control" id="updatetask" name="updatetask" aria-describedby="emailHelp">
+          
+        
+              <label  class="form-label my-2">Task Description</label>
+              <textarea class="form-control"  id="updatedescription" name="updatedescription"  style="height: 100px"></textarea>
+           
+            </div>
+            <!-- Add a hidden input field for the note ID -->
+  
+            <button type="button" class="btn btn-primary" onclick="updateSubmit()">Submit</button>
+        </form>
+
+
+        
+      </div>
+   
+    </div>
+  </div>
+</div>
+
+
+      <div class="container">
+        <h2 class="my-3">Add task</h2>
+        <form method="POST" action="/insert" onsubmit="handleSubmit(event)">
+            <div class="mb-3">
+              <label for="exampleInputEmail1" class="form-label">Task title</label>
+              <input type="text" class="form-control" id="task" name="task" aria-describedby="emailHelp">
+            
+          
+                <label for="exampleInputEmail1" class="form-label my-2">Task Description</label>
+                <textarea class="form-control"  id="description" name="description" style="height: 100px"></textarea>
+             
+              </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+      </div>
+
+
+    <div id="main" class="container">
+
+      <h2 class="my-3">Your To-Do List</h2>
+
+
+      <div id="no-todos-message" class="alert alert-info mt-3">
+        No todos found.
+      </div>
+  
+
+
+        
+      <div  id="todo-cards" class="d-flex flex-wrap">
+  
+        <i class="fa-solid fa-trash mx-3" onclick="deleteTodo"></i>
+        
+      </div>
+
+    </div>
+
+     
+       
+        
+          
+ 
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/919136c7c2.js" crossorigin="anonymous"></script>
+    <script> 
+
+ 
+
+      const handleSubmit = async (event) => {
+        event.preventDefault(); // Prevent the form from submitting
+    
+        // Get the task and description values from the form
+        let task = document.getElementById('task').value;
+        let description = document.getElementById('description').value;
+    
+        // Create an object to hold the form data
+        const formData = { task, description };
+    
+        // Send the form data to your Express route using a fetch request
+        try {
+          const response = await fetch('/insert', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+          });
+    
+          if (response.ok) {
+            // Handle a successful response here, if needed
+            console.log('Form data sent successfully.');
+            displayTodos();
+            alert('Task Added Successfully')
+          } else {
+            // Handle errors, if any
+            console.error('Failed to send form data.');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+    
+      };
+
+
+      const displayTodos = async () => {
+    try {
+        const response = await fetch('/retrieveTodos');
+        if (response.ok) {
+            const data = await response.json();
+            const todos = data.todos;
+            const todoCards = document.getElementById('todo-cards');
+
+            const noTodosMessage = document.getElementById('no-todos-message');
+
+            // Clear existing cards
+            todoCards.innerHTML = '';
+
+            if (todos.length === 0) {
+        // If there are no todos, display the message
+        noTodosMessage.style.display = 'block';
+      } else {
+        noTodosMessage.style.display = 'none'; // Hide the message if there are todos
+      }
+              
+            
+
+            // Generate cards for each todo
+            todos.forEach(todo => {
+                const card = document.createElement('div');
+              
+              
+                card.innerHTML = `
+                <div class="card m-3" style="width: 15rem;">
+  
+  <div class="card-body">
+    <h5 class="card-title">${todo.title}</h5>
+    <p class="card-text">${todo.description}</p>
+    <i class="fa-regular fa-pen-to-square" id="${todo.id}" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="updateTodo(this)"></i>
+    <i class="fa-solid fa-trash mx-3" id="${todo.id}" onclick="deleteTodo(this)"></i>
+   
+  </div>
+</div>
+                `;
+                todoCards.appendChild(card);
+            });
+        } else {
+            console.error('Failed to fetch todos.');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+    
+};
+
+// Call the function to display todos when the page loads
+displayTodos();
+
+
+
+
+const deleteTodo = async (e) => {
+  console.log('clicked')
+  const todoId = e.getAttribute('id');
+  try {
+    const response = await fetch(`/delete/${todoId}`, {
+      method: 'DELETE',
+    });
+
+    if (response.ok) {
+      // Handle successful deletion
+      console.log('Todo deleted successfully.');
+      displayTodos();
+      alert('Task deleted Successfully')
+    } else {
+      // Handle errors
+      console.error('Failed to delete todo.');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+
+
+let updateId; // Define updateId in the global scope
+
+const updateTodo = async (e) => {
+  updateId = e.getAttribute('id'); // Assign the id value to the global updateId
+  console.log(updateId);
+}
+
+const updateSubmit = async () => {
+  const updateTask = document.getElementById('updatetask').value;
+  const updateDescription = document.getElementById('updatedescription').value;
+
+  const formData = { title: updateTask, description: updateDescription };
+
+  try {
+    const response = await fetch(`/update/${updateId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (response.ok) {
+      console.log('Todo updated successfully.');
+      displayTodos();
+      alert('Task updated Successfully')
+      $('#exampleModal').modal('hide'); // Close the modal
+    } else {
+      console.error('Failed to update todo.');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+
+
+
+
+    </script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+</body>
+</html>
